@@ -1,0 +1,1 @@
+- Use pnpm and pnpx instead of npm for everything. 
