@@ -17,16 +17,16 @@ A type-safe RPC communication system connecting a Hono server with a React clien
 ## Client (apps/client)
 - **Framework**: React 19 with Vite, TypeScript
 - **UI**: Shadcn/ui components with Tailwind CSS
-- **State Management**: Zustand stores for API state
+- **State Management**: React useState hooks for component state
 - **RPC Client**: Hono client (`hc`) connected to localhost:3000
 - **Features**:
-  - Type-safe API calls to server endpoints
-  - Real-time loading states and error handling
+  - Direct API calls from component with async functions
+  - Loading states and error handling with useState
   - Interactive buttons to fetch hello message and session data
   - Display of server responses in formatted JSON
 
 ## Architecture
 - **RPC Pattern**: Client uses Hono's `hc` helper for remote procedure calls
 - **Type Safety**: Runtime type assertions with TypeScript interfaces
-- **State Management**: Centralized Zustand store for API operation states
+- **State Management**: Local component state with useState hooks
 - **Cross-Origin**: CORS middleware enables client-server communication

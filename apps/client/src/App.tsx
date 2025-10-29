@@ -1,15 +1,51 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { Button } from "./components/ui/button";
-import { useApi } from "./hooks/useApi";
+import { client } from "./lib/api";
+
+type SessionResponse = {
+  session: { user: { id: string; email: string } };
+  user: { id: string; email: string };
+};
 
 function App() {
-  const { helloMessage, session, isLoading, error, fetchHello, fetchSession } = useApi();
+  const [helloMessage, setHelloMessage] = useState<string | null>(null);
+  const [session, setSession] = useState<SessionResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchHello();
-  }, [fetchHello]);
+  const fetchHello = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await (client as any)["api/hello"].$get();
+      const data = await res.json();
+      setHelloMessage(data.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSession = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await (client as any)["api/session"].$get();
+      const data: SessionResponse = await res.json();
+      setSession(data);
+    } catch (err) {
+      if (err instanceof Error && err.message.includes("401")) {
+        setSession(null);
+      } else {
+        setError(err instanceof Error ? err.message : "Unknown error");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SidebarProvider>
